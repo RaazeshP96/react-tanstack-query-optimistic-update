@@ -1,11 +1,19 @@
 import './App.css'
+import { useState } from 'react'
 import ChangeBgButton from './components/ChangeBgButton'
+import SimpleBgButton from './components/SimpleBgButton'
 
 function App() {
+  const [mode, setMode] = useState<'optimistic' | 'simple'>('optimistic')
+
   return (
     <div>
-      <h1>Optimistic Background Color</h1>
-      <ChangeBgButton />
+      <h1>Background Color Demo — using {mode === 'optimistic' ? 'Optimistic Mutation' : 'Simple Mutation'}</h1>
+      <nav style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+        <button onClick={() => setMode('optimistic')} disabled={mode === 'optimistic'}>Optimistic</button>
+        <button onClick={() => setMode('simple')} disabled={mode === 'simple'}>Simple</button>
+      </nav>
+      {mode === 'optimistic' ? <ChangeBgButton /> : <SimpleBgButton />}
     </div>
   )
 }
