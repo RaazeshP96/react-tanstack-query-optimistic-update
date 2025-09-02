@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchColor, setColor } from '../api/color'
+import { toast } from 'react-toastify'
 
 export default function ChangeBgButton() {
   const queryClient = useQueryClient()
@@ -15,8 +16,10 @@ export default function ChangeBgButton() {
     },
     onError: (_err, _vars, ctx) => {
       if (ctx?.previous !== undefined) queryClient.setQueryData(['color'], ctx.previous)
+      toast.error('Failed to change color (rolled back)')
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['color'] }),
+    onSuccess: () => toast.success('Color changed (optimistic)'),
   })
 
   if (colorQuery.isPending) return <p>Loading…</p>

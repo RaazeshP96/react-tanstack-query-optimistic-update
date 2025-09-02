@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchColor, setColor } from '../api/color'
+import { toast } from 'react-toastify'
 
 export default function SimpleBgButton() {
   const queryClient = useQueryClient()
@@ -8,6 +9,8 @@ export default function SimpleBgButton() {
   const mutation = useMutation<string, Error, string>({
     mutationFn: (next) => setColor(next),
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['color'] }),
+    onSuccess: () => toast.success('Color changed'),
+    onError: () => toast.error('Failed to change color'),
   })
 
   if (colorQuery.isPending) return <p>Loading…</p>
