@@ -1,12 +1,38 @@
-# React + Vite
+# TanStack Query Optimistic Updates vs. Simple Mutations (React + Vite + TS)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project demonstrates how Optimistic Updates in TanStack Query make UI feel instant compared to a simple mutation that waits for the server.
 
-Currently, two official plugins are available:
+## Demo
+- Two modes with the same UI:
+  - Optimistic: updates cache immediately (onMutate + rollback)
+  - Simple: waits for server, then invalidates to refetch
+- Success/error toasts via `react-toastify`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Prerequisites
+- Node 18+
+- npm
 
-## Expanding the ESLint configuration
+## Getting Started
+```bash
+npm install
+npm run dev
+```
+Open http://localhost:5173 and use the nav to switch between Optimistic and Simple.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Key Files
+- `src/api/color.ts` – mock server with latency and random failures
+- `src/components/ChangeBgButton.tsx` – optimistic mutation (onMutate, rollback, invalidate)
+- `src/components/SimpleBgButton.tsx` – simple mutation (invalidate on settle)
+- `src/App.tsx` – nav to switch modes + `ToastContainer`
+
+## Optimistic Update Pattern (TL;DR)
+1. `onMutate`: cancel queries, snapshot previous cache, write optimistic value
+2. `onError`: rollback to snapshot
+3. `onSettled`: re-sync (invalidate) or `onSuccess`: replace with response
+
+Official guide: https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates
+
+## Scripts
+- `npm run dev` – start Vite dev server
+- `npm run build` – production build
+- `npm run preview` – preview build
